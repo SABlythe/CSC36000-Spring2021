@@ -1,0 +1,19 @@
+#ifndef _MY_STACK_HPP_
+#define _MY_STACK_HPP_
+
+#include <list>
+
+template <class T>
+class MyStack
+{
+private:
+  list<T> _data;
+public:
+  void push(const T &val);
+  void pop();
+  const T& top() const;
+
+  bool isEmpty() const;
+};
+
+#endif
