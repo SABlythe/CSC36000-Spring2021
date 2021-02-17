@@ -8,7 +8,7 @@ using namespace std;
 int main(int argc, char *argv[])
 {
   MyStack<int> numbers;
-
+ 
   numbers.push(42);
   numbers.push(102);
 
