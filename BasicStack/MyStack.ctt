@@ -1,0 +1,39 @@
+#include "MyStack.hpp"
+
+#include<iostream>
+
+using namespace std;
+
+template <class X>
+void
+MyStack<X>::push(const X& somethingToPush)
+{
+  list<X>::push_front(somethingToPush);
+}
+
+template <class X>
+void
+MyStack<X>::pop()
+{
+  if (!isEmpty())
+    list<X>::pop_front();
+  else
+    cout << "EMPTY STACK - CANNOT POP!" << endl; 
+}
+
+template <class X>
+const X&
+MyStack<X>::top() const
+{
+   return list<X>::front();
+}
+
+template <class X>
+bool
+MyStack<X>::isEmpty() const
+{
+  return list<X>::empty();
+}
+
+
+
