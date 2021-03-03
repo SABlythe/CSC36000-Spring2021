@@ -34,8 +34,8 @@ AVLNode* rotateWithLeftChild(AVLNode *k2)
   k2->left() = k1->right(); // Y
   k1->right() =  k2;
 
-  k2->height() = 1 + max (k2->left()->height(), k2->right()->height() );
-  k1->height() = 1 + max (k1->left()->height(), k2->height() );
+  k2->height() = 1 + max (getHeight(k2->left()), getHeight(k2->right()) );
+  k1->height() = 1 + max (getHeight(k1->left()), getHeight(k2) );
 
   return k1;
 }
@@ -53,14 +53,15 @@ AVLNode* rotateWithRightChild(AVLNode *k2)
   k2->right() = k1->left(); // Y
   k1->left() =  k2;
 
-  k2->height() = 1 + max (k2->left()->height(), k2->right()->height() );
-  k1->height() = 1 + max (k1->left()->height(), k2->height() );
+  k2->height() = 1 + max (getHeight(k2->left()), getHeight(k2->right()) );
+  k1->height() = 1 + max (getHeight(k1->right()), getHeight(k2) );
 
   return k1;
 }
 
 AVLNode* doubleWithRightChild(AVLNode *k3)
 {
+  cout << "double-rot-right: " << *k3 << endl; 
   AVLNode *k1 = k3->right();
   k3->right() = rotateWithLeftChild(k1);
   return rotateWithRightChild(k3);
@@ -82,9 +83,9 @@ AVLNode::insert(int newVal, AVLNode *intoSubTree)
       intoSubTree->_left=insert(newVal, intoSubTree->_left);
 
       // update _height for AVL manipulations
-      int leftHeight = getHeight(_left);
+      int leftHeight = getHeight(intoSubTree->_left);
 
-      int rightHeight = getHeight(_right);
+      int rightHeight = getHeight(intoSubTree->_right);
 
       // might need AVL rotations
       if (leftHeight-rightHeight==2) // imbalance in left
@@ -106,9 +107,9 @@ AVLNode::insert(int newVal, AVLNode *intoSubTree)
       intoSubTree->_right=insert(newVal, intoSubTree->_right);
 
       // update _height for AVL manipulations
-      int leftHeight = getHeight(_left);
+      int leftHeight = getHeight(intoSubTree->_left);
 
-      int rightHeight = getHeight(_right);
+      int rightHeight = getHeight(intoSubTree->_right);
 
       // might need AVL rotations
       if (rightHeight-leftHeight==2) // imbalance in right
@@ -124,7 +125,6 @@ AVLNode::insert(int newVal, AVLNode *intoSubTree)
 	      intoSubTree=doubleWithRightChild(intoSubTree);
 	    }
 	}
-
     }
   else // node value already in tree (==)
     {
@@ -132,7 +132,64 @@ AVLNode::insert(int newVal, AVLNode *intoSubTree)
 
   intoSubTree->height() = 1 + max(getHeight(intoSubTree->left()),
 				  getHeight(intoSubTree->right()) ); 
-  
-  
+
   return intoSubTree;
+}
+
+AVLNode*
+AVLNode::remove(int existingVal, AVLNode *fromSubTree)
+{
+  if (!fromSubTree)
+    return nullptr;
+
+  if (existingVal < fromSubTree->_val)
+    {
+      fromSubTree->left() = remove(existingVal, fromSubTree->left() );
+    }
+  else if (existingVal > fromSubTree->_val)
+    {
+      fromSubTree->right() = remove(existingVal, fromSubTree->right() );
+    }
+  else // this is the node I want to remove!
+    {
+      if (fromSubTree->isLeaf())  // 0 children
+	{
+	  fromSubTree=nullptr;
+	}
+      else if (fromSubTree->left() && fromSubTree->right() ) // 2 children
+	{
+	  AVLNode *toDel = fromSubTree->left();
+	  while(toDel->right()!=nullptr)
+	    {
+	      toDel = toDel->right();
+	    }
+
+	  int valueToMove = toDel->value();
+
+	  fromSubTree->left()=remove(valueToMove, fromSubTree->left());
+	  fromSubTree->value() = valueToMove;
+	}
+      else // 1 child
+	{
+	  if (fromSubTree->left() )
+	    fromSubTree = fromSubTree->left();
+	  else // onlyhave right child
+	    fromSubTree = fromSubTree->right();
+	}
+      
+    }
+
+  // rebalance now if needed
+  int balance = getHeight(fromSubTree->left()) -
+                getHeight(fromSubTree->right()) ;
+
+  // trouble when balance >1 or <-1
+  
+  return fromSubTree;
+}
+
+
+ostream& operator<<(ostream &os, const AVLNode &n)
+{
+  return n.print(os);
 }

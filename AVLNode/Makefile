@@ -1,4 +1,4 @@
-OPTS= -Wall -ansi -pedantic -std=c++17
+OPTS= -g -Wall -ansi -pedantic -std=c++17
 
 OBJS = main.o AVLTree.o AVLNode.o
 
@@ -6,7 +6,7 @@ CC = g++ -c $(OPTS)
 LN = g++
 
 AVLtest: $(OBJS)
-	$(LN) -o AVLTest $(OBJS)
+	$(LN) -o AVLtest $(OBJS)
 
 main.o: main.cpp AVLTree.hpp AVLNode.hpp
 	$(CC) main.cpp
@@ -18,5 +18,5 @@ AVLNode.o: AVLNode.cpp AVLNode.hpp
 	$(CC) AVLNode.cpp
 
 clean:
-	/bin/rm -f $(OBJS) AVLTest *~
+	/bin/rm -f $(OBJS) AVLtest *~
 

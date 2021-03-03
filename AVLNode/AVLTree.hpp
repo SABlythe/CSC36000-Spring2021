@@ -12,7 +12,8 @@ private:
 public:
   AVLTree():_root(nullptr) {}
 
-  void insert(int newVal); 
+  void insert(int newVal);
+  void remove(int val); 
 
   std::ostream& display(std::ostream &os) const;
 };

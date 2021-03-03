@@ -12,6 +12,20 @@ AVLTree::insert(int newVal)
   _root = _root->insert(newVal, _root);
 }
 
+void
+AVLTree::remove(int toDel)
+{
+  if (!_root)
+    return;
+  else
+    {
+      _root = _root->remove(toDel, _root);
+    }
+}
+
+
+
+
 int depth;
 
 void helper(ostream &os, AVLNode *node)
