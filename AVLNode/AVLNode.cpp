@@ -179,11 +179,49 @@ AVLNode::remove(int existingVal, AVLNode *fromSubTree)
       
     }
 
+  if (!fromSubTree)
+    return nullptr;
+  
   // rebalance now if needed
   int balance = getHeight(fromSubTree->left()) -
                 getHeight(fromSubTree->right()) ;
 
-  // trouble when balance >1 or <-1
+  // is the left subtree of height more than 2 bigger than right subtree
+  if (balance==2)
+    {
+      int subBalance = getHeight(fromSubTree->left()->left()) -
+	               getHeight(fromSubTree->left()->right());
+
+      // left-left issue
+      if (subBalance >= 0)
+	{
+	  fromSubTree = rotateWithLeftChild(fromSubTree);
+	}
+      else // left-right issue
+	{
+	  fromSubTree = doubleWithLeftChild(fromSubTree);
+	}
+    }
+  
+  // is the right subtree of height more than 2 bigger than left subtree
+  if (balance==-2)
+    {
+      int subBalance = getHeight(fromSubTree->right()->left()) -
+	               getHeight(fromSubTree->right()->right());
+
+      // right-right issue
+      if (subBalance < 0)
+	{
+	  fromSubTree = rotateWithRightChild(fromSubTree);
+	}
+      else // left-right issue
+	{
+	  fromSubTree = doubleWithRightChild(fromSubTree);
+	}
+    }
+
+  fromSubTree->_height = 1 + max( getHeight(fromSubTree->left()) ,
+				  getHeight(fromSubTree->right()) );
   
   return fromSubTree;
 }
