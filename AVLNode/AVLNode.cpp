@@ -61,7 +61,6 @@ AVLNode* rotateWithRightChild(AVLNode *k2)
 
 AVLNode* doubleWithRightChild(AVLNode *k3)
 {
-  cout << "double-rot-right: " << *k3 << endl; 
   AVLNode *k1 = k3->right();
   k3->right() = rotateWithLeftChild(k1);
   return rotateWithRightChild(k3);
